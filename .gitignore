@@ -1,3 +1,7 @@
+#misc
+uploads/*
+!uploads/.gitkeep
+
 # Logs
 logs
 *.log

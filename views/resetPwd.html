@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/signup.css">
+    <title>Document</title>
+</head>
+
+<body styles="background: url('../images/bg_dark.jpg')">
+    <main class="auth-container">
+        <div class="form-wrapper">
+            <form id="resetPasswordForm">
+                <h2 style="text-align: center; color: aliceblue;">Reset Your Password</h2>
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" required>
+                <p id="passwordError" style="color: red; display: none; width: 100%;">Password must be at least 8
+                    characters, include 1
+                    uppercase, 1 lowercase, 1 number, and 1 special character.</p>
+
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+                <p id="confirmError" style="color: red; display: none; width: 100%;">Passwords do not match!</p>
+
+                <br>
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" id="showPassword"
+                        style="width: auto; transform: scale(1);   transform: translateY(50%);"> Show Password
+                </label>
+
+                <br><br>
+
+                <button type="submit">Reset Password</button>
+            </form>
+        </div>
+
+        <div id="resetPwdNotification" class="hidden"></div>
+
+    </main>
+
+    <script>
+        document.getElementById("resetPasswordForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get("token");
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const passwordError = document.getElementById("passwordError");
+            const confirmError = document.getElementById("confirmError");
+
+            function showresetPwdNotification(message) {
+                const notification = document.getElementById("resetPwdNotification");
+                notification.innerHTML = message;
+                notification.classList.add("show");
+
+                setTimeout(() => {
+                    notification.classList.remove("show");
+                }, 5000);
+            }
+
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (!passwordRegex.test(newPassword)) {
+                passwordError.style.display = "block";
+                return;
+            } else {
+                passwordError.style.display = "none";
+            }
+
+            if (newPassword !== confirmPassword) {
+                confirmError.style.display = "block";
+                return;
+            } else {
+                confirmError.style.display = "none";
+            }
+
+            const response = await fetch("/auth/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token, newPassword }),
+            });
+
+            const result = await response.json();
+            showresetPwdNotification(result.message);
+            // setTimeout(() => {
+            //     window.location.href = '/signup.html';
+            // }, 3000);
+        });
+
+        document.getElementById("showPassword").addEventListener("change", function () {
+            const passwordField = document.getElementById("newPassword");
+            const confirmField = document.getElementById("confirmPassword");
+
+            if (this.checked) {
+                passwordField.type = "text";
+                confirmField.type = "text";
+
+                setTimeout(() => {
+                    this.checked = false;
+                    passwordField.type = "password";
+                    confirmField.type = "password";
+                }, 7000);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
