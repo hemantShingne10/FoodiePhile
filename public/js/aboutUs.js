@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.getElementById("updateProfileBtn").addEventListener("click", () => {
-          window.location.href = "/profile.html?tab=editProfile"; // Redirect to profile page
+          window.location.href = "/profile.html?tab=editProfile"; 
         });
   
         document.getElementById("viewOrdersBtn").addEventListener("click", () => {
-          window.location.href = "/profile.html?tab=orders"; // Redirect to profile page
+          window.location.href = "/profile.html?tab=orders"; 
         });
 
         // Function to load user data into popup
