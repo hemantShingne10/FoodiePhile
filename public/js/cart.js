@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       console.log("Cashfree SDK Loaded:", Cashfree);
     }
-  }, 2000); // Wait 2 seconds for script to load
+  }, 2000); 
 
   // Proceed to Payment
   proceedToPaymentBtn.addEventListener("click", async () => {
@@ -263,11 +263,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const deliveryCharge = 50;
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + deliveryCharge;
 
-    const orderId = "ORDER_" + new Date().getTime(); // Unique Order ID
+    const orderId = "ORDER_" + new Date().getTime(); 
     console.log(orderId);
 
     try {
-      // Step 1: Create Order in Database
       const orderResponse = await fetch("/api/orders/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -282,7 +281,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const orderData = await orderResponse.json();
       console.log("Order Created:", orderData);
 
-      // Step 2: Generate Cashfree Payment Order
       const paymentResponse = await fetch("/api/payments/create-payment-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -295,17 +293,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       });
       const paymentData = await paymentResponse.json();
-      console.log("Payment Session:", paymentData); //Log the response
+      console.log("Payment Session:", paymentData); 
 
       const cashfree = Cashfree({
         mode: "sandbox",
       });
 
       if (paymentData && paymentData.payment_session_id) {
+        const baseUrl = window.location.origin;
         let checkoutOptions = {
           paymentSessionId: paymentData.payment_session_id,
           redirectTarget: "_self",
-          returnUrl: `http://localhost:3000/cart.html?order_id=${orderId}`,
+          returnUrl:  `${baseUrl}/cart.html?order_id=${orderId}`,
           redirectOnFailure: true  
         };
         console.log("Redirecting with:", checkoutOptions);

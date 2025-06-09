@@ -111,13 +111,13 @@ router.post("/forgot-password", async (req, res) => {
   //Sending email with the reset password link
   const transporter = nodemailer.createTransport({
       service: "gmail",
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS} //update your email and app password in .env file
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS} 
   });
 
   const resetLink = `http://localhost:3000/resetPwd.html?token=${resetToken}`;
 
   await transporter.sendMail({
-      from: "your_email@gmail.com",
+      from: process.env.EMAIL_USER,
       to: user.email,
       subject: "Password Reset",
       html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,

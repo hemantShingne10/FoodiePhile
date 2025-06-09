@@ -4,10 +4,9 @@ const router = express.Router();
 const nodemailer = require("nodemailer");
 const Order = require("../models/orderModel");
 const User = require("../models/userModel")
-require("dotenv").config();
 
-const APP_ID = process.env.CASHFREE_APP_ID; 
-const SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
+const APP_ID = process.env.CASHFREE_APP_ID?.trim();
+const SECRET_KEY = process.env.CASHFREE_SECRET_KEY?.trim();
 const ENVIRONMENT = "TEST";
 
 const BASE_URL =

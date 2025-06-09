@@ -1,6 +1,8 @@
 #misc
 uploads/*
 !uploads/.gitkeep
+migration.js
+demoUpload.js
 
 # Logs
 logs

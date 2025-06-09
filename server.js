@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
-const bodyParser = require("body-parser"); 
+const helmet = require("helmet");
 const connectDB = require("./src/utils/db"); 
 
 const app = express();
@@ -10,12 +10,59 @@ const PORT = process.env.PORT || 3000;
 connectDB();
 
 // Middleware to serve static files
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
+app.use(express.static(path.join(__dirname, "public"), {maxAge: "30d",}));
 
 // Middleware to parse JSON and URL-encoded data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "https://sdk.cashfree.com",
+        "https://use.fontawesome.com",
+        "'unsafe-inline'"
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://use.fontawesome.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://use.fontawesome.com",
+        "https://fonts.gstatic.com"
+      ],
+      imgSrc: [
+        "'self'",
+        "data:",
+        "https://res.cloudinary.com"
+      ],
+      connectSrc: [
+        "'self'",
+        "https://sdk.cashfree.com",
+        "https://api.cashfree.com",
+        "https://sandbox.cashfree.com"
+      ],
+      frameSrc: [
+        "'self'",
+        "https://sdk.cashfree.com",
+        "https://sandbox.cashfree.com"
+      ],
+      formAction: [
+        "'self'",
+        "https://sandbox.cashfree.com"
+      ],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}));
+
+
+app.get("/health", (req, res) => res.send("OK"));
 
 // Importing Routes
 const viewRoutes = require("./src/routes/viewRoutes");

@@ -8,9 +8,10 @@ const menuSchema = new mongoose.Schema({
         type: String, 
         required: true, 
         enum: ["Snacks", "Main Course", "Dessert", "Drinks"]
-    },
-    image: { type: String, required: true }
-}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
+    }, 
+    image: { type: String, required: true },      
+    imageId: {type: String},   
+}, { timestamps: true }); 
 
 const Menu = mongoose.models.Menu || mongoose.model("Menu", menuSchema);
 
